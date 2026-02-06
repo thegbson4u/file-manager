@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>📁 File Manager</h1>
+            </div>
+            <nav class="quick-links">
+                <a href="#" onclick="navigateTo(getHomePath())" class="nav-link active" id="homeLink">
+                    <span class="icon">🏠</span> Home
+                </a>
+                <a href="#" onclick="navigateTo(getDesktopPath())" class="nav-link" id="desktopLink">
+                    <span class="icon">🖥️</span> Desktop
+                </a>
+                <a href="#" onclick="navigateTo(getDocumentsPath())" class="nav-link" id="documentsLink">
+                    <span class="icon">📄</span> Documents
+                </a>
+                <a href="#" onclick="navigateTo(getDownloadsPath())" class="nav-link" id="downloadsLink">
+                    <span class="icon">⬇️</span> Downloads
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="breadcrumb">
+                    <button class="btn-icon" onclick="goBack()" title="Back">◀</button>
+                    <button class="btn-icon" onclick="goForward()" title="Forward">▶</button>
+                    <input type="text" id="pathInput" class="path-input" placeholder="Enter path..." onkeypress="handlePathKeypress(event)">
+                </div>
+                
+                <div class="actions">
+                    <button class="btn-icon" onclick="refreshFiles()" title="Refresh">🔄</button>
+                    <button class="btn-primary" onclick="showNewFolderDialog()">➕ New Folder</button>
+                    <button class="btn-primary" onclick="document.getElementById('fileInput').click()">📤 Upload</button>
+                    <input type="file" id="fileInput" style="display:none;" onchange="uploadFile(event)">
+                </div>
+            </div>
+
+            <!-- File Display -->
+            <div class="file-container">
+                <div class="file-header">
+                    <div class="col-name">Name</div>
+                    <div class="col-size">Size</div>
+                    <div class="col-modified">Modified</div>
+                    <div class="col-actions">Actions</div>
+                </div>
+
+                <div id="fileList" class="file-list">
+                    <div class="loading">Loading files...</div>
+                </div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span id="statusMessage">Ready</span>
+            </div>
+        </main>
+    </div>
+
+    <!-- Dialogs -->
+    <!-- New Folder Dialog -->
+    <div id="newFolderDialog" class="dialog hidden">
+        <div class="dialog-content">
+            <h2>Create New Folder</h2>
+            <input type="text" id="folderName" placeholder="Folder name" class="input-field">
+            <div class="dialog-actions">
+                <button class="btn-secondary" onclick="closeDialog('newFolderDialog')">Cancel</button>
+                <button class="btn-primary" onclick="createNewFolder()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Dialog -->
+    <div id="renameDialog" class="dialog hidden">
+        <div class="dialog-content">
+            <h2>Rename File</h2>
+            <input type="text" id="renameName" placeholder="New name" class="input-field">
+            <div class="dialog-actions">
+                <button class="btn-secondary" onclick="closeDialog('renameDialog')">Cancel</button>
+                <button class="btn-primary" onclick="confirmRename()">Rename</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div id="confirmDialog" class="dialog hidden">
+        <div class="dialog-content">
+            <h2>Confirm Action</h2>
+            <p id="confirmMessage"></p>
+            <div class="dialog-actions">
+                <button class="btn-secondary" onclick="closeDialog('confirmDialog')">Cancel</button>
+                <button class="btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
